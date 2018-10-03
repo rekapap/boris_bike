@@ -1,8 +1,14 @@
 
 class Bike
 
+DEFAULT_STATUS = true
+
+  def initialize(status = DEFAULT_STATUS)
+    @status = status
+  end
+
   def working?
-    be_working = true
+    @status
   end
 
 end
