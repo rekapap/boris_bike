@@ -30,8 +30,12 @@ describe DockingStation do
   end
 
   it 'doesnt accept more than 20 bikes' do
-    DockingStation::DEFAULT_CAPACITY.times {subject.dock(Bike.new)}
+    subject.capacity.times {subject.dock(Bike.new)}
     expect {subject.dock(Bike.new)}.to raise_error 'Full capacity'
+  end
+
+  it 'has a default capacity, if no params to DockingStation' do
+    expect(subject.capacity).to eq DockingStation::DEFAULT_CAPACITY
   end
 
 end
