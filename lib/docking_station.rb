@@ -1,5 +1,6 @@
 # creating file for docking station class
 require_relative 'bike'
+require 'pry'
 
 class DockingStation
   attr_reader :bikes, :capacity
@@ -8,24 +9,29 @@ class DockingStation
   def initialize(capacity = DEFAULT_CAPACITY)
     @capacity = capacity
     @bikes = []
+    @broken_bikes = []
   end
 
   def release_bike
-    fail "no bikes" if empty?
+    fail 'No bikes' if @bikes.empty?
     @bikes.pop
   end
 
   def dock(bike)
     fail 'Full capacity' if full?
-    @bikes << bike
+    if bike.working?
+      @bikes << bike
+    else
+      @broken_bikes << bike
+    end
   end
 
   private
   def full?
-    @bikes.length >= DEFAULT_CAPACITY
+    @bikes.length + @broken_bikes.length >= DEFAULT_CAPACITY
   end
 
   def empty?
-    @bikes.empty?
+    @bikes.empty? && @broken_bikes.empty?
   end
 end

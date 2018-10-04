@@ -13,7 +13,7 @@ attr_writer :working_status
   end
 
   def report_broken
-    !@working_status 
+    !@working_status
   end
 
 end
