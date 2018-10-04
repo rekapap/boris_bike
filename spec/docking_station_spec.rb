@@ -1,20 +1,23 @@
 # testing the docking station
 require 'docking_station'
 require 'bike'
+require 'pry'
 
 describe DockingStation do
   it { is_expected.to respond_to :release_bike }
 
+  let(:bike) { double(:bike) }
   it 'runs method to release bike' do
-    subject.dock(double(:bike))
-    bike = subject.release_bike
-    expect(bike).to be_working
+    allow(bike).to receive(:working?).and_return(true)
+    subject.dock(bike)
+    released_bike = subject.release_bike
+    expect(released_bike).to be_working
   end
 
   it 'docking bike' do
-    bikes = double(:bike)
-    subject.dock(bikes)
-    expect(subject.bikes).to eq [bikes]
+    allow(bike).to receive(:working?).and_return(true)
+    subject.dock(bike)
+    expect(subject.bikes).to eq [bike]
   end
 
   it {is_expected.to respond_to(:dock).with(1).argument }
@@ -24,15 +27,17 @@ describe DockingStation do
   end
 
   it 'accepts more than one bike' do
-    bike_a = (double(:bike))
-    bike_b = (double(:bike))
+    allow(bike).to receive(:working?).and_return(true)
+    bike_a = bike
+    bike_b = bike #
     subject.dock(bike_a)
     expect(subject.dock(bike_b)).to eq [bike_a, bike_b]
   end
 
   it 'doesnt accept more than 20 bikes' do
-    subject.capacity.times {subject.dock(double(:bike))}
-    expect {subject.dock(double(:bike))}.to raise_error 'Full capacity'
+    allow(bike).to receive(:working?).and_return(true)
+    subject.capacity.times {subject.dock(bike)}
+    expect {subject.dock(bike)}.to raise_error 'Full capacity'
   end
 
   it 'has a default capacity, if no params to DockingStation' do
@@ -40,14 +45,14 @@ describe DockingStation do
   end
 
   it 'doesnot release broken bikes' do
-    # bike = Bike.new(false)
-    subject.dock(double(:bike))
+    allow(bike).to receive(:working?).and_return(false)
+    subject.dock(bike)
     expect {subject.release_bike}.to raise_error 'No bikes'
   end
 
   it 'accepts broken bikes and working bikes' do
-    # bike = Bike.new(false)
-    subject.dock(double(:bike))
+    allow(bike).to receive(:working?).and_return(false)
+    subject.dock(bike)
   end
 
 end
